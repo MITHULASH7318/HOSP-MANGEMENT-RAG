@@ -2,10 +2,11 @@ streamlit==1.32.0
 langchain==0.2.16
 langchain-community==0.2.16
 langchain-core==0.2.38
-sentence-transformers==3.0.1
+sentence-transformers==2.7.0
 faiss-cpu==1.8.0
 numpy==1.26.4
 requests==2.31.0
 python-dotenv==1.0.1
 pypdf==4.1.0
 tiktoken==0.7.0
+torch==2.2.2
