@@ -1,10 +1,4 @@
-"""
-rag_engine.py
-RAG pipeline using FAISS (no C++ build tools needed on Windows)
-"""
-
 import os
-import pickle
 import requests
 from pathlib import Path
 from typing import List, Optional
@@ -18,201 +12,101 @@ from langchain.schema import Document
 
 load_dotenv()
 
-# ─── Configuration ────────────────────────────────────────────────────────────
-OPENROUTER_API_KEY  = os.getenv("OPENROUTER_API_KEY", "")
-OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-MODEL_NAME          = os.getenv("MODEL_NAME", "mistralai/mixtral-8x7b-instruct")
-EMBEDDING_MODEL     = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
-FAISS_INDEX_DIR     = os.getenv("FAISS_INDEX_DIR", "./data/faiss_index")
-DOCUMENTS_DIR       = os.getenv("DOCUMENTS_DIR", "./data/documents")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
-AVAILABLE_MODELS = [
-    "mistralai/mixtral-8x7b-instruct",
-    "mistralai/mistral-7b-instruct",
-    "meta-llama/llama-3-70b-instruct",
-    "meta-llama/llama-3-8b-instruct",
-    "openai/gpt-3.5-turbo",
-    "openai/gpt-4o-mini",
-    "anthropic/claude-3-haiku",
-    "google/gemma-2-9b-it",
-]
+MODEL_NAME = "mistralai/mixtral-8x7b-instruct"
+FAISS_INDEX_DIR = "./data/faiss_index"
+DOCUMENTS_DIR = "./data/documents"
 
-
-# ─── Embeddings ───────────────────────────────────────────────────────────────
-def get_embedding_function() -> HuggingFaceEmbeddings:
+# ✅ FIXED EMBEDDING (NO META ERROR)
+def get_embedding_function():
     return HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
         model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
     )
 
-
-# ─── Document Loading ─────────────────────────────────────────────────────────
-def load_documents(docs_dir: str = DOCUMENTS_DIR) -> List[Document]:
+# ─── DOCUMENT LOAD ───
+def load_documents():
     docs = []
-    docs_path = Path(docs_dir)
+    path = Path(DOCUMENTS_DIR)
 
-    if not docs_path.exists():
-        raise FileNotFoundError(f"Documents directory not found: {docs_dir}")
+    for file in path.glob("**/*.txt"):
+        loader = TextLoader(str(file))
+        docs.extend(loader.load())
 
-    for txt_file in docs_path.glob("**/*.txt"):
-        try:
-            loader = TextLoader(str(txt_file), encoding="utf-8")
-            for doc in loader.load():
-                doc.metadata["filename"] = txt_file.name
-                docs.append(doc)
-        except Exception as e:
-            print(f"⚠️  Skipping {txt_file.name}: {e}")
+    for file in path.glob("**/*.pdf"):
+        loader = PyPDFLoader(str(file))
+        docs.extend(loader.load())
 
-    for pdf_file in docs_path.glob("**/*.pdf"):
-        try:
-            loader = PyPDFLoader(str(pdf_file))
-            for doc in loader.load():
-                doc.metadata["filename"] = pdf_file.name
-                docs.append(doc)
-        except Exception as e:
-            print(f"⚠️  Skipping {pdf_file.name}: {e}")
-
-    print(f"✅ Loaded {len(docs)} document section(s)")
     return docs
 
+# ─── CHUNK ───
+def chunk_documents(documents):
+    splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
+    return splitter.split_documents(documents)
 
-# ─── Chunking ─────────────────────────────────────────────────────────────────
-def chunk_documents(documents: List[Document]) -> List[Document]:
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=800,
-        chunk_overlap=150,
-        separators=["\n\n", "\n", ".", " ", ""],
-    )
-    chunks = splitter.split_documents(documents)
-    print(f"✅ Created {len(chunks)} chunks")
-    return chunks
-
-
-# ─── FAISS Vector Store ───────────────────────────────────────────────────────
-def build_vectorstore(chunks: List[Document], index_dir: str = FAISS_INDEX_DIR) -> FAISS:
+# ─── BUILD ───
+def build_vectorstore(chunks):
     embeddings = get_embedding_function()
-    vectorstore = FAISS.from_documents(chunks, embeddings)
-    Path(index_dir).mkdir(parents=True, exist_ok=True)
-    vectorstore.save_local(index_dir)
-    print(f"✅ FAISS index saved to: {index_dir}")
-    return vectorstore
+    vs = FAISS.from_documents(chunks, embeddings)
+    Path(FAISS_INDEX_DIR).mkdir(parents=True, exist_ok=True)
+    vs.save_local(FAISS_INDEX_DIR)
+    return vs
 
-
-def load_vectorstore(index_dir: str = FAISS_INDEX_DIR) -> Optional[FAISS]:
-    index_path = Path(index_dir)
-    if not index_path.exists() or not any(index_path.iterdir()):
+# ─── LOAD ───
+def load_vectorstore():
+    path = Path(FAISS_INDEX_DIR)
+    if not path.exists():
         return None
+
     try:
         embeddings = get_embedding_function()
-        vs = FAISS.load_local(index_dir, embeddings, allow_dangerous_deserialization=True)
-        print(f"✅ FAISS index loaded from: {index_dir}")
-        return vs
-    except Exception as e:
-        print(f"❌ Could not load FAISS index: {e}")
+        return FAISS.load_local(
+            FAISS_INDEX_DIR,
+            embeddings,
+            allow_dangerous_deserialization=True
+        )
+    except:
         return None
 
-
-def initialize_rag(force_rebuild: bool = False) -> FAISS:
+# ─── INIT ───
+def initialize_rag(force_rebuild=False):
     if not force_rebuild:
         vs = load_vectorstore()
-        if vs is not None:
+        if vs:
             return vs
 
-    print("🔨 Building knowledge base...")
-    documents = load_documents()
-    if not documents:
-        raise ValueError("No documents found. Add .txt or .pdf files to data/documents/")
-    chunks = chunk_documents(documents)
+    docs = load_documents()
+    chunks = chunk_documents(docs)
     return build_vectorstore(chunks)
 
+# ─── RETRIEVE ───
+def retrieve_context(vs, query):
+    return vs.similarity_search(query, k=5)
 
-# ─── Retrieval ────────────────────────────────────────────────────────────────
-def retrieve_context(vectorstore: FAISS, query: str, k: int = 5) -> List[Document]:
-    return vectorstore.similarity_search(query, k=k)
-
-
-def format_context(docs: List[Document]) -> str:
-    parts = []
-    for i, doc in enumerate(docs, 1):
-        source = doc.metadata.get("filename", "Unknown")
-        parts.append(f"[Source {i}: {source}]\n{doc.page_content.strip()}")
-    return "\n\n---\n\n".join(parts)
-
-
-# ─── OpenRouter LLM ───────────────────────────────────────────────────────────
-def call_openrouter(messages: list, model: str = MODEL_NAME,
-                    temperature: float = 0.2, max_tokens: int = 1024) -> str:
+# ─── LLM CALL ───
+def call_openrouter(messages):
     if not OPENROUTER_API_KEY:
-        raise ValueError("OPENROUTER_API_KEY not set. Add it to your .env file.")
+        raise ValueError("API KEY missing")
 
-    response = requests.post(
+    res = requests.post(
         f"{OPENROUTER_BASE_URL}/chat/completions",
-        headers={
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://hospital-rag.internal",
-            "X-Title": "Hospital Knowledge Assistant",
-        },
-        json={
-            "model": model,
-            "messages": messages,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-        },
-        timeout=60,
+        headers={"Authorization": f"Bearer {OPENROUTER_API_KEY}"},
+        json={"model": MODEL_NAME, "messages": messages},
     )
 
-    if response.status_code != 200:
-        raise Exception(f"OpenRouter error {response.status_code}: {response.text}")
+    return res.json()["choices"][0]["message"]["content"]
 
-    return response.json()["choices"][0]["message"]["content"]
+# ─── QA ───
+def answer_question(vectorstore, question):
+    docs = retrieve_context(vectorstore, question)
+    context = "\n".join([d.page_content for d in docs])
 
+    messages = [{
+        "role": "user",
+        "content": f"Context:\n{context}\n\nQuestion: {question}"
+    }]
 
-# ─── System Prompt ────────────────────────────────────────────────────────────
-SYSTEM_PROMPT = """You are MedBot, an expert hospital knowledge assistant for internal staff use.
-Help nurses and administrative staff find accurate information from hospital SOPs, policies, and manuals.
-
-RULES:
-- Answer ONLY from the provided document context
-- Use bullet points or numbered steps for procedures
-- Cite the source document name in your answer
-- If not found in context, say: "This is not in the current hospital documents. Please consult your supervisor."
-- Never give personal medical advice or diagnoses
-- Keep responses clear and professional"""
-
-
-# ─── Main Q&A Function ────────────────────────────────────────────────────────
-def answer_question(vectorstore: FAISS, question: str,
-                    chat_history: List[dict] = None,
-                    model: str = MODEL_NAME, k: int = 5) -> dict:
-    context_docs = retrieve_context(vectorstore, question, k=k)
-    context_str  = format_context(context_docs)
-
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    if chat_history:
-        messages.extend(chat_history[-8:])
-
-    messages.append({"role": "user", "content":
-        f"HOSPITAL DOCUMENT CONTEXT:\n{context_str}\n\nSTAFF QUESTION: {question}\n\n"
-        "Answer clearly based only on the documents above."
-    })
-
-    answer  = call_openrouter(messages, model=model)
-    sources = list({doc.metadata.get("filename", "Unknown") for doc in context_docs})
-
-    return {"answer": answer, "sources": sources, "context_docs": context_docs}
-
-
-# ─── Document Stats ───────────────────────────────────────────────────────────
-def get_document_stats(docs_dir: str = DOCUMENTS_DIR) -> dict:
-    docs_path = Path(docs_dir)
-    txt_files = list(docs_path.glob("**/*.txt")) if docs_path.exists() else []
-    pdf_files = list(docs_path.glob("**/*.pdf")) if docs_path.exists() else []
-    all_files = txt_files + pdf_files
-    return {
-        "total_files": len(all_files),
-        "txt_files":   len(txt_files),
-        "pdf_files":   len(pdf_files),
-        "filenames":   [f.name for f in all_files],
-    }
+    answer = call_openrouter(messages)
+    return {"answer": answer}
