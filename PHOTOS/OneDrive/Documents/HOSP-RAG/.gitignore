@@ -1,0 +1,72 @@
+# 🔹 Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 🔹 Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# 🔹 Environment variables (API keys, secrets)
+.env
+.env.*
+
+# 🔹 Streamlit secrets
+.streamlit/secrets.toml
+
+# 🔹 Logs
+*.log
+
+# 🔹 IDE / Editor
+.vscode/
+.idea/
+
+# 🔹 OS files
+.DS_Store
+Thumbs.db
+
+# 🔹 Jupyter
+.ipynb_checkpoints/
+
+# 🔹 LangChain / RAG specific
+
+# FAISS index files (VERY IMPORTANT)
+*.faiss
+*.index
+
+# Vector stores / embeddings
+vectorstore/
+embeddings/
+chroma_db/
+db/
+
+# Uploaded files (PDFs etc.)
+uploads/
+temp/
+tmp/
+
+# 🔹 Model files
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.bin
+
+# 🔹 Data files (optional)
+data/
+*.csv
+*.xlsx
+
+# 🔹 Build / packaging
+build/
+dist/
+*.egg-info/
+
+# 🔹 Temporary files
+*.tmp
+*.bak
+
+# 🔹 Git (avoid nested repo issues)
+.git/
