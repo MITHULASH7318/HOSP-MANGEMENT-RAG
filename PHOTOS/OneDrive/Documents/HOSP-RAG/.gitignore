@@ -1,72 +1,57 @@
-# 🔹 Python cache
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
 
-# 🔹 Virtual environments
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
 venv/
 env/
 ENV/
-.venv/
+.env/
 
-# 🔹 Environment variables (API keys, secrets)
+# ── Secrets / API keys (NEVER commit these) ───────────────────────────────────
 .env
-.env.*
+.env.local
+.env.production
+*.key
+secrets.toml
 
-# 🔹 Streamlit secrets
+# ── Streamlit ─────────────────────────────────────────────────────────────────
 .streamlit/secrets.toml
 
-# 🔹 Logs
-*.log
+# ── FAISS index (large binary files — rebuild on deploy) ──────────────────────
+data/faiss_index/
 
-# 🔹 IDE / Editor
-.vscode/
-.idea/
+# ── Model cache (downloaded at runtime) ──────────────────────────────────────
+models/
+.cache/
+~/.cache/huggingface/
 
-# 🔹 OS files
+# ── OS / Editor ───────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# 🔹 Jupyter
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
+*.ipynb
 
-# 🔹 LangChain / RAG specific
-
-# FAISS index files (VERY IMPORTANT)
-*.faiss
-*.index
-
-# Vector stores / embeddings
-vectorstore/
-embeddings/
-chroma_db/
-db/
-
-# Uploaded files (PDFs etc.)
-uploads/
-temp/
-tmp/
-
-# 🔹 Model files
-*.pkl
-*.joblib
-*.h5
-*.pt
-*.bin
-
-# 🔹 Data files (optional)
-data/
-*.csv
-*.xlsx
-
-# 🔹 Build / packaging
-build/
-dist/
-*.egg-info/
-
-# 🔹 Temporary files
-*.tmp
-*.bak
-
-# 🔹 Git (avoid nested repo issues)
-.git/
+# ── Testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/

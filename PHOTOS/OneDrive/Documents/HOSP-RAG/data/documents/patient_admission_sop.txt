@@ -1,0 +1,67 @@
+STANDARD OPERATING PROCEDURE: PATIENT ADMISSION
+Document ID: SOP-ADM-001
+Version: 2.1 | Effective Date: January 2024
+Department: Admissions & Registration
+
+1. PURPOSE
+This SOP outlines the standardized process for admitting patients to the hospital, ensuring accurate registration, proper documentation, and smooth patient flow.
+
+2. SCOPE
+Applies to all hospital staff involved in patient admission including front desk, nurses, and administrative staff.
+
+3. PROCEDURE
+
+3.1 EMERGENCY ADMISSIONS
+- Triage nurse assesses patient severity using ESI (Emergency Severity Index) scale
+- ESI Level 1 (Immediate): Patient taken directly to resuscitation bay
+- ESI Level 2 (Emergent): Seen within 15 minutes
+- ESI Level 3 (Urgent): Seen within 30 minutes
+- ESI Level 4-5 (Less Urgent/Non-urgent): Seen within 60-120 minutes
+- Notify attending physician immediately for Level 1 and 2
+- Document time of arrival, triage assessment, and initial vitals
+
+3.2 PLANNED/ELECTIVE ADMISSIONS
+- Verify pre-admission orders from physician
+- Confirm patient insurance eligibility and obtain authorization
+- Complete patient registration in HMS (Hospital Management System)
+- Collect valid government-issued photo ID and insurance card
+- Obtain signed consent forms: General Consent, HIPAA Notice, Financial Agreement
+- Assign bed based on clinical need and availability
+- Escort patient to assigned unit
+
+3.3 REQUIRED DOCUMENTATION AT ADMISSION
+- Patient demographics (full legal name, DOB, address, phone)
+- Emergency contact information (name, relationship, phone)
+- Insurance information (primary and secondary)
+- Referring physician details
+- Current medications list
+- Known allergies (medication, food, environmental)
+- Advance directive status
+
+4. IDENTIFICATION BANDING
+- Apply identification wristband immediately upon registration
+- Wristband must include: Patient name, DOB, MRN, allergies (in red)
+- Verify band accuracy with patient before application
+- Replace damaged or illegible bands immediately
+
+5. INSURANCE VERIFICATION
+- Run real-time eligibility check through system
+- Document copay/deductible amounts
+- Collect applicable copay at time of service
+- Flag self-pay patients for financial counseling within 24 hours
+
+6. BED ASSIGNMENT
+- Contact charge nurse of receiving unit before transfer
+- Confirm bed is clean and ready
+- Transport patient with appropriate escort (wheelchair/stretcher per condition)
+- Complete bed assignment handoff using SBAR format
+
+7. ESCALATION
+- Notify supervisor if bed hold exceeds 2 hours
+- Contact patient relations for complaints or concerns
+- Report any documentation discrepancies to medical records
+
+8. QUALITY INDICATORS
+- Target registration time: Under 15 minutes for non-emergency
+- Patient identification accuracy: 100%
+- Consent completion rate: 100% before treatment
