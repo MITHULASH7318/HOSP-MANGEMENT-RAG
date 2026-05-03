@@ -55,3 +55,24 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+# Ignore system & junk files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pbix
+*.xlsx
+*.sql
+*.txt
+*.lnk
+
+# OS files
+desktop.ini
+Thumbs.db
+
+# Folders
+Camera Roll/
+Saved Pictures/
+Screenshots/
+Documents/
+Desktop/
