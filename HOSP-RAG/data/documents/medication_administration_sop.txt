@@ -1,0 +1,72 @@
+STANDARD OPERATING PROCEDURE: MEDICATION ADMINISTRATION
+Document ID: SOP-MED-003
+Version: 3.0 | Effective Date: March 2024
+Department: Nursing & Pharmacy
+
+1. PURPOSE
+To ensure safe, accurate, and timely medication administration to all patients, preventing medication errors and adverse drug events.
+
+2. THE FIVE RIGHTS OF MEDICATION ADMINISTRATION
+Every nurse MUST verify the following before administering any medication:
+1. RIGHT PATIENT - Verify using two identifiers (name + DOB or MRN)
+2. RIGHT MEDICATION - Check drug name against MAR (Medication Administration Record)
+3. RIGHT DOSE - Confirm dose, calculate if needed, double-check high-alert meds
+4. RIGHT ROUTE - Oral, IV, IM, SubQ, topical, etc. as ordered
+5. RIGHT TIME - Administer within 30-minute window of scheduled time
+
+3. HIGH-ALERT MEDICATIONS (Require Double Verification)
+The following medications require TWO nurse verification before administration:
+- Insulin (all types)
+- Anticoagulants (Heparin, Warfarin, Low Molecular Weight Heparins)
+- Opioids (Morphine, Hydromorphone, Fentanyl, Oxycodone)
+- Concentrated Electrolytes (KCl, Hypertonic Saline)
+- Chemotherapy agents
+- Neuromuscular Blocking Agents
+
+4. MEDICATION ADMINISTRATION PROCEDURE
+
+4.1 PREPARATION
+- Perform hand hygiene before preparing medications
+- Prepare medications in a quiet, well-lit area, free from interruptions
+- Never prepare medications for more than one patient at a time
+- Check medication expiration date
+- Verify allergies before administration
+
+4.2 ADMINISTRATION
+- Take medication directly to bedside (do not leave unattended)
+- Scan patient wristband barcode (BCMA system)
+- Scan medication barcode
+- Verify the "5 Rights" at bedside
+- Explain medication purpose to patient
+- Administer and document immediately in MAR
+- Witness patient take oral medications when required
+
+4.3 IV MEDICATION SPECIFIC STEPS
+- Verify IV site patency and signs of infiltration/phlebitis
+- Check compatibility of IV medications
+- Set correct infusion rate on pump
+- Label all IV lines with drug name, concentration, rate, date/time
+
+5. MEDICATION ERRORS AND NEAR MISSES
+- All errors and near misses must be reported via RL Solutions (incident reporting system) within 1 hour
+- Notify charge nurse and attending physician immediately
+- Assess and monitor patient for adverse effects
+- Document clinical response and interventions
+
+6. CONTROLLED SUBSTANCE MANAGEMENT
+- Access only via Pyxis MedStation with valid login
+- Waste must be witnessed and co-signed by two nurses
+- Count discrepancies must be reported immediately to pharmacy and supervisor
+- Never leave controlled substances unattended
+
+7. STORAGE REQUIREMENTS
+- Medications stored at room temperature unless refrigeration required
+- Refrigerated medications: 2-8°C (36-46°F)
+- Controlled substances in double-locked cabinet
+- No medications stored in patient's personal belongings without order
+
+8. PATIENT REFUSAL
+- Document refusal in MAR
+- Educate patient on importance of medication
+- Notify prescribing physician
+- Never force medication administration
